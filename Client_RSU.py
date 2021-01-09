@@ -1,4 +1,7 @@
 import os, sys, socket
+import cryptography, hashlib
+from cryptography.fernet import Fernet
+import pickle
 
 class RSU():
 
@@ -41,14 +44,17 @@ class RSU():
 
 if __name__ == '__main__':
 
-    host = "192.168.8.101"
+    host = "127.0.0.1"
     port = 12345
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect((host, port))
     s.sendall(b"Data request RSU data")
     # Receive no more than 1024 bytes
-    tm = s.recv(1024)
+    data = s.recv(1024)
 
     s.close()
 
-    print("The time got from the server is %s" % tm.decode('ascii'))
+    print("The time got from the server is ")
+
+    for elt in pickle.loads(data):
+        print("----",elt)

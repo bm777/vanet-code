@@ -1,10 +1,14 @@
 import os, sys, socket
+import cryptography, hashlib, rsa
+import pickle
+from cryptography.fernet import Fernet
+
 
 class TA():
 
     def __init__(self):
-        self.RSU0 = ""
-        self.IDta = ""
+        self.RSU0 = ""      # OK
+        self.IDta = Fernet.generate_key()
         self.private = ""
         self.shared = ""
 
@@ -45,20 +49,31 @@ class TA():
 
     ####################################################### functions
     def refresh(self):
-        import random
-        alphacode = ["a", "b", "c", "1", "2", "3", "4", ]
-        tmp = ""
-        for i in range(10):
-            index = random.randint(0, len(alphacode)-1)
-            tmp += alphacode[index]
+        # key = Fernet.generate_key()
+        # public and private key
+        public, private = rsa.newkeys(512)
+        # generate shared key
 
-        self.set_RSU0(tmp)
+        shared = Fernet.generate_key()
+
+        return [public, shared, private]
+
+    def cupdate(self):
+        return self.refresh()
+
+    def sign(self, cupdate):
+        # hashed = []
+        # for h in cupdate:
+        #     tmp = "{}".format(h)
+        #     hashed.append()
+        hashed = [hashlib.sha256("{}".format(h).encode()).hexdigest() for h in cupdate]
+        return hashed
 
 
 if __name__ == '__main__':
 
     ta = TA()
-    host = "192.168.8.101"
+    host = "127.0.0.1"
     port = 12345
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.bind((host, port))
@@ -71,7 +86,17 @@ if __name__ == '__main__':
         data = conn.recv(1024)
         if not data: break
         print("======= data = ", data.decode())
-        ta.refresh()
-        conn.sendall(ta.get_RSU0().encode() + b": from server")
+        tmp = ta.cupdate()
+        signed = ta.sign(tmp)
+        final = tmp
+        for sign in signed:
+            final.append(sign)
+        final.append(ta.IDta)
+        data = pickle.dumps(final)
+
+        conn.sendall(data)
         print("=================================================")
+        ta.set_RSU0(tmp[0])
+        ta.set_shared(tmp[1])
+        ta.set_private(tmp[2])
         conn.close()
