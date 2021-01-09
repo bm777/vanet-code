@@ -53,7 +53,14 @@ class TA():
             tmp += alphacode[index]
 
         self.set_RSU0(tmp)
-
+        
+        import cryptography
+        from cryptography.fernet import Fernet
+        key = Fernet.generate_key()
+        file = open('key.key', 'wb')
+        file.write(key)
+        file.close()
+        self.set_shared(key)
 
 if __name__ == '__main__':
 
