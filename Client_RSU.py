@@ -50,7 +50,7 @@ if __name__ == '__main__':
     s.connect((host, port))
     s.sendall(b"Data request RSU data")
     # Receive no more than 1024 bytes
-    data = s.recv(1024)
+    data = s.recv(2048)
 
     s.close()
 

@@ -1,6 +1,7 @@
 import os, sys, socket
 import cryptography, hashlib, rsa
 import pickle
+from hashlib import sha512
 from cryptography.fernet import Fernet
 
 
@@ -61,13 +62,21 @@ class TA():
     def cupdate(self):
         return self.refresh()
 
+    def hs(self, data):
+        hash = int.from_bytes(sha512("{}".format(data).encode()).digest(), byteorder='big')
+        k = self.genkey()
+        signature = pow(hash, k.d, k.n)
+        return signature
+
     def sign(self, cupdate):
-        # hashed = []
-        # for h in cupdate:
-        #     tmp = "{}".format(h)
-        #     hashed.append()
-        hashed = [hashlib.sha256("{}".format(h).encode()).hexdigest() for h in cupdate]
+
+        # hashed = [rsa.encrypt(hashlib.sha256("{}".format(h).encode()).hexdigest(), cupdate[2]) for h in cupdate]
+        hashed = ["{}".format(self.hs(h)).encode() for h in cupdate]
         return hashed
+
+    def genkey(self):
+        from Crypto.PublicKey import RSA
+        return RSA.generate(bits=1024)
 
 
 if __name__ == '__main__':
@@ -83,7 +92,7 @@ if __name__ == '__main__':
     while True:
         conn, addr = s.accept()
         print('Connected by', addr)
-        data = conn.recv(1024)
+        data = conn.recv(2048)
         if not data: break
         print("======= data = ", data.decode())
         tmp = ta.cupdate()
