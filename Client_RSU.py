@@ -53,6 +53,14 @@ class RSU():
         signature = pow(hash, k.d, k.n)
         return signature
 
+
+def get_env():
+    return [os_environ["PUBLIC"],
+            os_environ["SHARED"],
+            os_environ["PRIVATE"],
+            os_environ["IDta"],
+            os_environ["RSU0"] ]
+
 if __name__ == '__main__':
 
     host = "127.0.0.1"
@@ -76,5 +84,31 @@ if __name__ == '__main__':
             local_data.append(elt)
 
     ####### setting data #############
-    os.environ['PublicKey'] = local_data[0]
-    os.environ['PublicKey'] = local_data[0]
+    os_environ = {}
+    os_environ['PUBLIC'] = local_data[0]
+    # print("{}".format(local_data[2].exportKey()), file=prv_file)
+    os_environ['SHARED'] = local_data[1]
+    os_environ['PRIVATE'] = local_data[2]
+    os_environ['IDta'] = local_data[3]
+    os_environ['RSU0'] = local_data[4]
+
+    print('++++++++++++++++++++++++++')
+
+    port2 = 12346
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.bind((host, port2))
+    s.listen(5)
+    print("Server RSU launched ...")
+    while  True:
+        conn2, addr = s.accept()
+        print('Connected by', addr)
+        data = conn2.recv(2048)
+        if not data: break
+
+        data = ["facked data from rsu server", 12345,"127.0.0.1"]
+        data = pickle.dumps(data)
+
+        conn2.sendall(data)
+        conn2.close()
+
+    # print(get_env())
