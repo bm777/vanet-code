@@ -102,10 +102,10 @@ if __name__ == '__main__':
     while  True:
         conn2, addr = s.accept()
         print('Connected by', addr)
-        data = conn2.recv(2048)
-        if not data: break
+        data_id = conn2.recv(2048)
+        print("data from car: ", data_id)
 
-        data = ["facked data from rsu server", 12345,"127.0.0.1"]
+        data = [data_id.decode(), os_environ["RSU0"]]
         data = pickle.dumps(data)
 
         conn2.sendall(data)
