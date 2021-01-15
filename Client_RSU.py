@@ -68,4 +68,7 @@ if __name__ == '__main__':
     print("The time got from the server is ")
 
     for elt in pickle.loads(data):
-        print("----",elt)
+        if type(elt) == type("".encode()):
+            print("----",elt.decode())
+        else:
+            print("----", elt)
