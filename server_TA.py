@@ -8,13 +8,23 @@ from cryptography.fernet import Fernet
 class TA():
 
     def __init__(self):
+        pu, pr = rsa.newkeys(512)
         self.RSU0 = Fernet.generate_key()      # OK
-        self.IDta = Fernet.generate_key()
-        self.private = ""
-        self.shared = ""
+        self.IDta = pu
+        self.private = pr
+        self.shared = Fernet.generate_key()
+        self.__rep()
 
     def __str__(self):
         return "__TA class__"
+
+    def __rep(self):
+        print("++++++++++++++++++++++ TA information +++++++++++++++++++++++++++++++++")
+        print("[IDta]       =>",self.IDta)
+        print("[PrivateKeyTA]       =>",self.IDta)
+        print("[SharedKeyTa]       =>",self.IDta)
+        print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n")
+
 
     def __del__(self):
         del self
@@ -96,7 +106,8 @@ if __name__ == '__main__':
         print('Connected by', addr)
         data = conn.recv(2048)
         if not data: break
-        print("======= data = ", data.decode())
+        print("=================================================")
+        print("======= Data from RSU = ", data.decode())
         tmp = ta.cupdate()
         # signed = ta.sign(tmp)
         final = tmp
@@ -106,8 +117,12 @@ if __name__ == '__main__':
         final.append(ta.RSU0)
         data = pickle.dumps(final)
 
-        conn.sendall(data)
         print("=================================================")
+        print("Data sent to RSU :")
+        for child in final:
+            print("---", child)
+        conn.sendall(data)
+
         ta.set_RSU0(tmp[0])
         ta.set_shared(tmp[1])
         ta.set_private(tmp[2])
