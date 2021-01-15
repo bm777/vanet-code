@@ -9,7 +9,7 @@ class TA():
 
     def __init__(self):
         self.RSU0 = Fernet.generate_key()      # OK
-        self.IDta = ""
+        self.IDta = Fernet.generate_key()
         self.private = ""
         self.shared = ""
 
@@ -98,10 +98,10 @@ if __name__ == '__main__':
         if not data: break
         print("======= data = ", data.decode())
         tmp = ta.cupdate()
-        signed = ta.sign(tmp)
+        # signed = ta.sign(tmp)
         final = tmp
-        for sign in signed:
-            final.append(sign)
+        # for sign in signed:
+        #     final.append(sign)
         final.append(ta.IDta)
         final.append(ta.RSU0)
         data = pickle.dumps(final)

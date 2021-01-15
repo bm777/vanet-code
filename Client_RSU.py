@@ -45,7 +45,7 @@ class RSU():
     ############################################ functions
     def compare(self, data, ):
 
-        fef
+        pass
 
     def hs(self, data):
         hash = int.from_bytes(sha512("{}".format(data).encode()).digest(), byteorder='big')
@@ -66,9 +66,15 @@ if __name__ == '__main__':
     s.close()
 
     print("The time got from the server is ")
-
+    local_data = []
     for elt in pickle.loads(data):
         if type(elt) == type("".encode()):
-            print("----",elt.decode())
+            print("----[encoded]",elt.decode())
+            local_data.append(elt.decode())
         else:
-            print("----", elt)
+            print("----[not encoded]", elt)
+            local_data.append(elt)
+
+    ####### setting data #############
+    os.environ['PublicKey'] = local_data[0]
+    os.environ['PublicKey'] = local_data[0]
