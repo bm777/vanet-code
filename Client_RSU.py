@@ -1,6 +1,7 @@
 import os, sys, socket
 import cryptography, hashlib
 from cryptography.fernet import Fernet
+from Crypto.PublicKey import RSA
 import pickle
 
 class RSU():
@@ -41,6 +42,16 @@ class RSU():
         if tmp != self.shared:
             selft.shared = tmp
 
+    ############################################ functions
+    def compare(self, data, ):
+
+        fef
+
+    def hs(self, data):
+        hash = int.from_bytes(sha512("{}".format(data).encode()).digest(), byteorder='big')
+        k = self.genkey()
+        signature = pow(hash, k.d, k.n)
+        return signature
 
 if __name__ == '__main__':
 

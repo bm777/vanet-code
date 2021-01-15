@@ -8,8 +8,8 @@ from cryptography.fernet import Fernet
 class TA():
 
     def __init__(self):
-        self.RSU0 = ""      # OK
-        self.IDta = Fernet.generate_key()
+        self.RSU0 = Fernet.generate_key()      # OK
+        self.IDta = ""
         self.private = ""
         self.shared = ""
 
@@ -62,9 +62,11 @@ class TA():
     def cupdate(self):
         return self.refresh()
 
+    public = ""
     def hs(self, data):
         hash = int.from_bytes(sha512("{}".format(data).encode()).digest(), byteorder='big')
         k = self.genkey()
+        public = (hex(k.n), hex(k.e))
         signature = pow(hash, k.d, k.n)
         return signature
 
@@ -101,6 +103,7 @@ if __name__ == '__main__':
         for sign in signed:
             final.append(sign)
         final.append(ta.IDta)
+        final.append(ta.RSU0)
         data = pickle.dumps(final)
 
         conn.sendall(data)
