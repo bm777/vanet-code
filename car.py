@@ -15,8 +15,9 @@ if __name__ == '__main__':
     s.sendall(id)
     # Receive no more than 1024 bytes
     data = s.recv(2048)
-
+    print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n')
+    print("Receive from RSU .............................................")
     for elt in pickle.loads(data):
-        print("----[not encoded]", elt)
+        print("----[encoded]", elt)
 
     s.close()

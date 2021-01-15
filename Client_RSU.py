@@ -7,10 +7,11 @@ import pickle
 class RSU():
 
     def __init__(self, data):
-        RSU0 = data[0]
-        IDta = data[1]
-        private = data[2]
-        shared = data[3]
+        self.RSU0 = data[0]
+        self.IDta = data[1]
+        self.private = data[2]
+        self.shared = data[3]
+
 
 
     def get_RSU0(self):
@@ -73,17 +74,19 @@ if __name__ == '__main__':
 
     s.close()
 
-    print("The time got from the server is ")
+    print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+    print("Receive from TA .............................................")
     local_data = []
     for elt in pickle.loads(data):
         if type(elt) == type("".encode()):
-            print("----[encoded]",elt.decode())
+            print("----[not encoded]",elt.decode())
             local_data.append(elt.decode())
         else:
-            print("----[not encoded]", elt)
+            print("----[encoded]", elt)
             local_data.append(elt)
 
     ####### setting data #############
+
     os_environ = {}
     os_environ['PUBLIC'] = local_data[0]
     # print("{}".format(local_data[2].exportKey()), file=prv_file)
@@ -91,8 +94,9 @@ if __name__ == '__main__':
     os_environ['PRIVATE'] = local_data[2]
     os_environ['IDta'] = local_data[3]
     os_environ['RSU0'] = local_data[4]
+    rsu = RSU([os_environ['RSU0'], os_environ['IDta'], os_environ['PRIVATE'], os_environ['SHARED']])
 
-    print('++++++++++++++++++++++++++')
+    print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n')
 
     port2 = 12346
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -103,9 +107,11 @@ if __name__ == '__main__':
         conn2, addr = s.accept()
         print('Connected by', addr)
         data_id = conn2.recv(2048)
-        print("data from car: ", data_id)
+        print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n")
+
 
         data = [data_id.decode(), os_environ["RSU0"]]
+        print("=============== data sent to car: ", data)
         data = pickle.dumps(data)
 
         conn2.sendall(data)
