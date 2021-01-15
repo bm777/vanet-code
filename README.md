@@ -9,4 +9,4 @@ python3 server_TA.py
 ```
 
 #### ** print RSU request **
-[status](assets/ta-status.png)
+![status](assets/ta-status.png)
