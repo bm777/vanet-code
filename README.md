@@ -2,7 +2,7 @@
 
 This code has 3 part.
 
-### 1. T.A 
+## 1. T.A 
 #### Launch TA as server
 ```
 python3 server_TA.py
@@ -14,7 +14,7 @@ python3 server_TA.py
 
 
 
-### 2. RSU
+## 2. RSU
 #### Launch RSU as server
 ```
 python3 Client_RSU.py
@@ -28,7 +28,7 @@ python3 Client_RSU.py
 ![status](assets/many-request-car.png)
 
 
-### 1. car
+## 3. car
 #### Launch car as client with ticket
 ```
 python3 car.py
