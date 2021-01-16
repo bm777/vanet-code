@@ -21,8 +21,8 @@ class TA():
     def __rep(self):
         print("++++++++++++++++++++++ TA information +++++++++++++++++++++++++++++++++")
         print("[IDta]       =>",self.IDta)
-        print("[PrivateKeyTA]       =>",self.IDta)
-        print("[SharedKeyTa]       =>",self.IDta)
+        print("[PrivateKeyTA]       =>",self.private)
+        print("[SharedKeyTa]       =>",self.shared)
         print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n")
 
 
